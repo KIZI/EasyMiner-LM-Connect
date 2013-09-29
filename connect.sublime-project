@@ -9,7 +9,7 @@
 	"build_systems":
 	[
 		{
-			"name": "SewebarConnect",
+			"name": "LMConnect",
 			"working_dir": "./",
 			"cmd": ["build.sh"],
 			"windows": {
