@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Xml.Linq;
 using LMWrapper.ODBC;
@@ -99,6 +100,14 @@ namespace SewebarConnect.API.Requests.Application
 				}
 
 				return true;
+			}
+		}
+
+		public NotRegisteredUser Owner
+		{
+			get
+			{
+				return NotRegisteredUser.FromRequest(this.HttpContext.Request);
 			}
 		}
 

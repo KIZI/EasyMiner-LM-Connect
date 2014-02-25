@@ -1,13 +1,10 @@
 ///<reference path='node.d.ts'/>
-///<reference path='restify.d.ts'/>
-///<reference path='data2xml.d.ts' />
 
 import http = require('http');
 import restify = require('restify');
-
-var xml2js = require('xml2js');
-var S = require('string');
-var data2xml = require('data2xml');
+import data2xml = require('data2xml');
+import xml2js = require('xml2js');
+import S = require('string');
 
 export module SewebarConnect {
     var parser = new xml2js.Parser(),
@@ -23,7 +20,7 @@ export module SewebarConnect {
             error = S(e).trim().s;
 
         xml2js.parseString(error, (parseError, result) => {
-            var message = 'Uknonwn error - ' + info;
+            var message = err.statusCode || 'Uknonwn error - ' + info;
 
             if(parseError) {
                 message = err.message || err || parseError;
@@ -35,6 +32,13 @@ export module SewebarConnect {
                 callback(message, null);
             }
         });
+    }
+
+    function getAnonymousUser(): { name: string; password: string } {
+        return {
+            name: 'anonymous',
+            password: ''
+        };
     }
 
     export class SewebarConnectClient {
@@ -52,6 +56,8 @@ export module SewebarConnect {
                 }
             };
 
+            var user = getAnonymousUser();
+
             // TODO: avoid changing cfg itself
             this.opts = cfg;
             this.server = this.opts.app == null ? 'SewebarConnect' : this.opts.app;
@@ -67,9 +73,10 @@ export module SewebarConnect {
             delete this.opts.app;
 
             this.restClient = restify.createStringClient(this.opts);
+            this.restClient.basicAuth(user.name, user.password);
         }
 
-        public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner: Miner) => void): void {
+        public register(connection: DbConnection, metabase: DbConnection, callback: (err, miner?: Miner) => void): void {
             // POST miners
             var mb, database, data, raw,
                 url = [
@@ -124,8 +131,8 @@ export module SewebarConnect {
             this.restClient.post(this.opts, data, (err, req, res, body) => {
                 var xml = S(body).trim().s;
 
-                parser.parseString(xml, (err, result) => {
-                    if (!err && result.response['$'].status === 'success') {
+                parser.parseString(xml, (parseErr, result) => {
+                    if (!parseErr && result.response['$'].status === 'success') {
                         if (callback && typeof callback === 'function') {
                             callback(null, new Miner(result.response['$'].id, this));
                         }
@@ -136,7 +143,7 @@ export module SewebarConnect {
             });
         }
 
-        public get(id: string, callback: (err: any, miner: Miner) => void ): void {
+        public getMiner(id: string, callback: (err: any, miner?: Miner) => void ): void {
             // GET miners/{minerId}
             var url = [
                 this.server,
@@ -173,7 +180,7 @@ export module SewebarConnect {
             this.opts = this.client.opts;
         }
 
-        public init(dictionary: string, callback: (err) => void ) {
+        public init(dictionary: string, callback: (err) => void): void {
             // PUT miners/{minerId}/DataDictionary
             var url = [
                 this.server,
@@ -196,31 +203,34 @@ export module SewebarConnect {
             });
         }
 
-        public runTask(task: string, callback: (err, results) => void): void {
-            this.run('task', task, callback);
-        }
+        public runTask(task: string, callback: (err, results?) => void): void;
+        public runTask(task: TaskOptions, callback: (err, results?) => void): void;
+        public runTask(task: any, callback: (err, results?) => void): void {
+            var opts: TaskOptions;
 
-        public runGrid(task: string, callback: (err, results) => void): void {
-            this.run('grid', task, callback);
-        }
+            if (typeof task === 'string') {
+                opts = {
+                    type: 'task',
+                    definition: task
+                };
+            } else {
+                opts = task || {};
+            }
 
-        public runProc(task: string, callback: (err, results) => void): void {
-            this.run('proc', task, callback);
-        }
-
-        private run(taskType: string, task: string, callback: (err, results) => void ): void {
             // miners/{minerId}/tasks/{taskType}{?alias,template}
             var url = [
                 this.server,
                 'miners/',
                 this.id,
                 '/tasks/',
-                taskType
+                opts.type,
+                '?alias=', (opts.alias || ''),
+                '&template=', (opts.template || '')
             ].join('');
 
             this.opts.path = url;
 
-            this.client.restClient.post(this.opts, task, (e, req, res, data) => {
+            this.client.restClient.post(this.opts, opts.definition, (e, req, res, data) => {
                 if (e) {
                     errorHandler(e, 'POST ' + url, callback);
                 } else if (callback && typeof callback === 'function') {
@@ -229,54 +239,61 @@ export module SewebarConnect {
             });
         }
 
-        public cancelTask(task: string, callback: (err, results) => void): void {
-            this.cancel('task', task, callback);
-        }
+        public cancelTask(task: Task, callback: (err, results?) => void): void;
+        public cancelTask(task: string, callback: (err, results?) => void): void;
+        public cancelTask(task: any, callback: (err, results?) => void): void {
+            var opts: Task,
+                url: string[],
+                data = xml('CancelationRequest', {});
 
-        public cancelGrid(task: string, callback: (err, results) => void): void {
-            this.cancel('grid', task, callback);
-        }
-
-        public cancelProc(task: string, callback: (err, results) => void): void {
-            this.cancel('proc', task, callback);
-        }
-
-        public cancelAll(callback: (err, results) => void ): void {
-            this.cancel(null, null, callback);
-        }
-
-        private cancel(taskType: string, task: string, callback: (err, results) => void ) {
-            // PUT miners/{minerId}/tasks/{taskType}/{taskName}
-            var data,
-                url = [
-                    this.server,
-                    'miners/',
-                    this.id,
-                    '/tasks'
-                ];
-
-            if (taskType) {
-                url.push('/', taskType, '/', task);
+            if (typeof task === 'string') {
+                opts = {
+                    type: 'task',
+                    name: task
+                };
+            } else {
+                opts = task || {};
             }
-            
+
+            // PUT miners/{minerId}/tasks/{taskType}/{taskName}
+            url = [
+                this.server,
+                'miners/',
+                this.id,
+                '/tasks',
+                '/', opts.type, '/',
+                opts.name
+            ];
+
             this.opts.path = url.join('');
 
-            data = xml('CancelationRequest', {});
-
-            this.client.restClient.put(this.opts, data, (e, req, res, data) => {
+            this.client.restClient.put(this.opts, data, (e, req, res, d) => {
                 if (e) {
                     errorHandler(e, 'PUT ' + url, callback);
                 } else if (callback && typeof callback === 'function') {
-                    callback(null, data);
+                    callback(null, d);
                 }
             });
         }
 
-        public getTask(taskName: string, alias: string, template: string, callback: (err: any, results: string) => void ): void {
-            if (typeof alias === 'function') {
-                callback = <any>alias;
-                alias = '';
-                template = '';
+        public cancelAll(type: string, callback: (err, results?) => void ): void {
+            this.cancelTask({
+                type: type || 'task'
+            }, callback);
+        }
+
+        public getTask(task: string, callback: (err: any, results?: string) => void ): void;
+        public getTask(task: TaskOptions, callback: (err: any, results?: string) => void ): void;
+        public getTask(task: any, callback: (err: any, results?: string) => void ): void {
+            var opts: TaskOptions;
+
+            if (typeof task === 'string') {
+                opts = {
+                    type: 'task',
+                    name: task
+                };
+            } else {
+                opts = task || {};
             }
 
             // miners/{minerId}/tasks/{taskType}/{taskName}{?alias,template}
@@ -286,9 +303,9 @@ export module SewebarConnect {
                 this.id,
                 '/tasks/',
                 '/',
-                taskName,
-                '?alias=', alias,
-                '&template=', template
+                opts.name,
+                '?alias=', (opts.alias || ''),
+                '&template=', (opts.template || '')
             ].join('');
 
             this.opts.path = url;
@@ -302,7 +319,7 @@ export module SewebarConnect {
             });
         }
 
-        public getAllTasks(callback: (err: any, results: string) => void ): void {
+        public getAllTasks(callback: (err: any, results?: string) => void): void {
             // GET miners/{minerId}/tasks
             var url = [
                 this.server,
@@ -340,21 +357,28 @@ export module SewebarConnect {
             });
         }
 
-        public getDataDictionary(matrix: string, template: string, callback: (err: any, dictionary: string) => void): void {
-            if (typeof matrix === 'function') {
-                callback = <any>matrix;
-                matrix = '';
-                template = '';
+        public getDataDictionary(dd: string, callback: (err: any, dictionary?: string) => void): void;
+        public getDataDictionary(dd: DataDictionaryOptions, callback: (err: any, dictionary?: string) => void): void;
+        public getDataDictionary(dd: any, callback: (err: any, dictionary?: string) => void): void {
+            var opts: DataDictionaryOptions,
+                url: string;
+
+            if (typeof dd === 'string') {
+                opts = {
+                    matrix: dd
+                };
+            } else {
+                opts = dd || {};
             }
 
             // GET miners/{minerId}/DataDictionary{?matrix,template}
-            var url = [
+            url = [
                 this.server,
                 'miners/',
                 this.id,
                 '/DataDictionary',
-                '?matrix=', matrix,
-                '&template=', template
+                '?matrix=', (opts.matrix || ''),
+                '&template=', (opts.template || '')
             ].join('');
 
             this.opts.path = url;
@@ -376,5 +400,21 @@ export module SewebarConnect {
         database?: string;
         username?: string;
         password?: string;
+    }
+
+    export interface Task {
+        type: string;
+        name?: string;
+        definition?: string;
+    }
+
+    export interface TaskOptions extends Task {
+        alias?: string;
+        template?: string;
+    }
+
+    export interface DataDictionaryOptions {
+        matrix: string;
+        template?: string;
     }
 }

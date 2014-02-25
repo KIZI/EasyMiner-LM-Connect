@@ -60,6 +60,7 @@
     <Compile Include="LISpMiner\ExecutableStatus.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
     <Compile Include="LISpMiner\LMGridPooler.cs" />
+    <Compile Include="LISpMiner\LMPooler.cs" />
     <Compile Include="LISpMiner\LMProcPooler.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="ODBC\MySQLConnection.cs" />
     <Compile Include="ODBC\ODBCConnection.cs" />
     <Compile Include="ODBC\OdbcDrivers.cs" />
+    <Compile Include="PCGridSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortGuid.cs" />
     <Compile Include="Utils\DirectoryUtil.cs" />

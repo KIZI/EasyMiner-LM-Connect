@@ -1,7 +1,6 @@
-﻿@using System.EnterpriseServices
-@using SewebarConnect
+﻿@using SewebarConnect
 
-@model object
+@model IEnumerable<SewebarConnect.Models.MinerViewModel>
 
 @{
 	ViewBag.Title = "title";
@@ -26,15 +25,33 @@
 
 @if (MvcApplication.Environment.ExistingMiners.Count > 0)
 {
+	var line = 1;
+	
 	<h3>Existing miners</h3>
-	<ol>
-		@foreach (var miner in MvcApplication.Environment.Miners)
+	<table>
+		<tr>
+			<th></th>
+			<th>Id</th>
+			<th>Owner</th>
+			<th>Created</th>
+			<th></th>
+		</tr>
+		@foreach (var miner in @Model)
 		{
 			string shared = miner.SharedPool ? "shared" : "non-shared";
-			
-			<li class="@shared">
-				<a href="@Url.Action("Miner", new {guid = miner})">@miner.Id</a>&nbsp;(<a href="@Url.Action("Remove", new { guid = miner.Id })" class="ajax">Remove</a>)
-			</li>
-        }
-	</ol>
+
+			<tr>
+				<td>@(line++).</td>
+				<td>
+					<a href="@Url.Action("Miner", new {guid = miner.Id})" class="@shared">@miner.Id</a>
+				</td>
+				<td>@miner.Owner</td>
+				<td><em style="color: lightgray">@miner.Miner.Created</em></td>
+				<td><a href="@Url.Action("Remove", new { guid = miner.Id })" class="ajax">Remove</a></td>
+			</tr>
+		}
+	</table>
 }
+
+<hr/>
+<span class="annotation shared">shared binaries</span>, <span class="annotation non-shared">private binaries</span>

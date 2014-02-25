@@ -7,6 +7,7 @@ namespace SewebarKey
 	{
 		private ISet<Database> _databases;
 		private ISet<Miner> _miners;
+		private ISet<UserPendingUpdate> _pendingUpdates;
 		private string _role;
 
 		public virtual Guid Id { get; set; }
@@ -19,7 +20,7 @@ namespace SewebarKey
 
 		public virtual string Role
 		{
-			get { return _role ?? "user"; }
+			get { return string.IsNullOrEmpty(_role) ? "user" : _role; }
 			set { _role = value; }
 		}
 
@@ -33,6 +34,20 @@ namespace SewebarKey
 		{
 			get { return _miners ?? (_miners = new HashedSet<Miner>()); }
 			set { _miners = value; }
+		}
+
+		public virtual ISet<UserPendingUpdate> PendingUpdates
+		{
+			get { return _pendingUpdates ?? (_pendingUpdates = new HashedSet<UserPendingUpdate>()); }
+			set { _pendingUpdates = value; }
+		}
+
+		public virtual bool IsAdmin
+		{
+			get
+			{
+				return this.Role.ToLowerInvariant() == "admin";
+			}
 		}
 	}
 }
