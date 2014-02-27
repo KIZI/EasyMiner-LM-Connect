@@ -1,3 +1,3 @@
 #!/bin/bash
 
-xbuild "./Sources/SEWEBAR Connect.sln" /t:Rebuild /p:Configuration=Release
+xbuild "./Sources/LMConnect.sln" /t:Rebuild /p:Configuration=Release

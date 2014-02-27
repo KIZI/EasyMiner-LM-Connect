@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LMConnect.Environment">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CJACgAAAAAAQAAAAACSAAAEAAAABAAAAAAAACAEAEAA=</HashCode>
+      <FileName>Environment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="RegisteredMiners" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="LMConnect.LISpMiner.LISpMiner" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Metabase" Type="LMConnect.ODBC.AccessConnection" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="5.599" />
+        <Point X="4.156" Y="5.599" />
+        <Point X="4.156" Y="7.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.773" Y="1.016" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Importer" Type="LMConnect.LISpMiner.LMSwbImporter" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="5.704" />
+        <Point X="8.031" Y="5.704" />
+        <Point X="8.031" Y="8.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Environment" Type="LMConnect.Environment" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.625" Y="2.5" />
+        <Point X="6.625" Y="2.031" />
+        <Point X="2" Y="2.031" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IACCAAACAGEIICEAoAAAAAABAAREQAQwAADAAAgAAAA=</HashCode>
+      <FileName>LISpMiner\LISpMiner.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Database" />
+      <Property Name="Metabase" />
+      <Property Name="Importer" />
+      <Property Name="Exporter" />
+      <Property Name="Environment" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LMConnect.LISpMiner.LMSwbExporter">
+    <Position X="5.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAEIBAAAQBCAIAAEAAAgAAAgAIACAAAAAAAI=</HashCode>
+      <FileName>LISpMiner\LMSwbExporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMConnect.LISpMiner.LMSwbImporter">
+    <Position X="7.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAACAAAAAAEAAAAAAAIAAAIAAAAAA=</HashCode>
+      <FileName>LISpMiner\LMSwbImporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMConnect.LISpMiner.Executable">
+    <Position X="7" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAMAAgEAAQABQAAAAAAQAQEBAAAIAAAAQAAAAI=</HashCode>
+      <FileName>LISpMiner\Executable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Status" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="LMConnect.ODBC.AccessConnection">
+    <Position X="3" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIACAAAAAAAABBAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ODBC\AccessConnection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Class Name="LMConnect.ODBC.MySQLConnection">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAACQAAAAAQAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>ODBC\MySQLConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMConnect.ODBC.OdbcConnection">
+    <Position X="2.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABACAAACCACAAAAAAA=</HashCode>
+      <FileName>ODBC\ODBCConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LMGridPooler">
+    <Position X="9.25" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.488" />
+        <Point X="10" Y="13.488" />
+        <Point X="10" Y="11.791" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAKAQAAAAAEAKCBACAAAAAAAgAAAAAIBAAAAAAAAA=</HashCode>
+      <FileName>LISpMiner\LMGridPooler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LMProcPooler">
+    <Position X="11.25" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.454" />
+        <Point X="12" Y="13.454" />
+        <Point X="12" Y="10.969" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAACAQAAAAAEAIABAAAAAAAAAgAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>LISpMiner\LMProcPooler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LMWrapper.LISpMiner.LMTaskPooler">
+    <Position X="13" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="LMWrapper.LISpMiner.Executable" ManuallyRouted="true">
+      <Path>
+        <Point X="7.75" Y="15" />
+        <Point X="7.75" Y="13.471" />
+        <Point X="13.75" Y="13.471" />
+        <Point X="13.75" Y="12.008" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAACAQAAAAAEAIABgAAAAAAAIgABgAAIAAAAAAAAAI=</HashCode>
+      <FileName>LISpMiner\LMTaskPooler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="LMConnect.IMetabase">
+    <Position X="10.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IMetabase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LMConnect.LISpMiner.ITaskLauncher">
+    <Position X="9" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAQEAAAAEAQABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LISpMiner\TaskLauncher.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="LMConnect.LISpMiner.ExecutableStatus">
+    <Position X="10.25" Y="15.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>LISpMiner\ExecutableStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
