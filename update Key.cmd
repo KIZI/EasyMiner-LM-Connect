@@ -1,1 +1,1 @@
-Build\Release\SewebarConsole.exe key update ..\..\Sources\SewebarConnect\hibernate.cfg.xml
+Build\Release\LMConnect.Console.exe key update ..\..\Sources\LMConnect.Web\hibernate.cfg.xml

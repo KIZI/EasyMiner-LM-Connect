@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
@@ -20,11 +21,19 @@ namespace LMConnect.Key.Configurations
 					_cfg = new Configuration();
 					_cfg.Configure(this.ConfigurationXmlPath);
 
-					//TODO: workaround pro threading SQLite. Problem pri uploadu souboru pres backgroundworkera a relativnim linkem na datasource. 
+					// SQLite relative path to config file itself
 					if (_cfg.Properties["connection.driver_class"] == "NHibernate.Driver.SQLite20Driver" &&
-						_cfg.Properties["connection.connection_string"] == "Data Source=data.sqlite")
+						_cfg.Properties["connection.connection_string"] == "Data Source=key.sqlite")
 					{
-						_cfg.Properties["connection.connection_string"] = string.Format("Data Source={0}data.sqlite", AppDomain.CurrentDomain.BaseDirectory);
+						var cfgFolder = Path.GetDirectoryName(this.ConfigurationXmlPath);
+
+						if (cfgFolder != null)
+						{
+							var basePath = Path.GetFullPath((new Uri(cfgFolder + "\\..\\..\\Data")).LocalPath);
+							var connectionString = string.Format("Data Source={0}\\key.sqlite", basePath);
+
+							_cfg.Properties["connection.connection_string"] = connectionString;
+						}
 					}
 				}
 

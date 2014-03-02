@@ -1,1 +1,1 @@
-Build\Release\SewebarConsole.exe LM update Libs
+Build\Release\LMConnect.Console.exe LM update Libs
