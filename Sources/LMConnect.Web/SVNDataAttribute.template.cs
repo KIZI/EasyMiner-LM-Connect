@@ -35,21 +35,16 @@ namespace LMConnect.Web
 		WCREV = $WCREV$
 		WCDATE = $WCDATE$
 		WCNOW = $WCNOW$
-		WCRANGE = $WCRANGE$
-		WCMIXED = $WCMIXED?Mixed update revision:Not mixed$
-		WCMODS = $WCMODS?Modified:Not modified$
-		WCURL = $WCURL$
-		WCINSVN = $WCINSVN?Versioned:Not Versioned$
-		WCNEEDSLOCK = $WCNEEDSLOCK?Lock Required:Lock not required$
-		WCISLOCKED = $WCISLOCKED?Locked:Not Locked$
-		WCLOCKDATE = $WCLOCKDATE$
-		WCLOCKOWNER = $WCLOCKOWNER$
-		WCLOCKCOMMENT = $WCLOCKCOMMENT$
 		*/
 
 		public string WCREV
 		{
 			get { return "$WCREV$"; }
+		}
+
+		public string WCRANGE
+		{
+			get { return WCREV; }
 		}
 
 		public string WCDATE
@@ -60,25 +55,6 @@ namespace LMConnect.Web
 		public string WCNOW
 		{
 			get { return "$WCNOW$"; }
-		}
-		public string WCRANGE
-		{
-			get { return "$WCRANGE$"; }
-		}
-
-		public string WCMODS
-		{
-			get { return "$WCMODS$"; }
-		}
-
-		public string WCURL
-		{
-			get { return "$WCURL$"; }
-		}
-
-		public string WCLOCKCOMMENT
-		{
-			get { return "$WCLOCKCOMMENT$"; }
 		}
 
 		public SVNDataAttribute()

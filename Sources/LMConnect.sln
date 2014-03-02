@@ -12,6 +12,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Key", "LMConnect.Key\LMConnect.Key.csproj", "{6EF009CC-E3D2-4E81-AF8C-DB13D8164587}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Client", "LMConnect.Client\LMConnect.Client.csproj", "{E680F0D3-43A5-4904-8108-142FBDF6D158}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{185D6D4A-8303-4947-85BF-ED822120B588}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
