@@ -11,13 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Console", "LMConn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Key", "LMConnect.Key\LMConnect.Key.csproj", "{6EF009CC-E3D2-4E81-AF8C-DB13D8164587}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Client", "LMConnect.Client\LMConnect.Client.csproj", "{E680F0D3-43A5-4904-8108-142FBDF6D158}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{185D6D4A-8303-4947-85BF-ED822120B588}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Web.Tests", "..\Tests\LMConnect.Web.Tests\LMConnect.Web.Tests.csproj", "{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C4EB4249-43C4-4C23-8B50-DD1E0A9A05A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +44,15 @@ Global
 		{6EF009CC-E3D2-4E81-AF8C-DB13D8164587}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EF009CC-E3D2-4E81-AF8C-DB13D8164587}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EF009CC-E3D2-4E81-AF8C-DB13D8164587}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E680F0D3-43A5-4904-8108-142FBDF6D158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E680F0D3-43A5-4904-8108-142FBDF6D158}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E680F0D3-43A5-4904-8108-142FBDF6D158}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E680F0D3-43A5-4904-8108-142FBDF6D158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD698C23-EB88-4CB8-9FF5-3C05F73DE056} = {C4EB4249-43C4-4C23-8B50-DD1E0A9A05A2}
 	EndGlobalSection
 EndGlobal

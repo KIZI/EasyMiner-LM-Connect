@@ -4,12 +4,12 @@ using System.Net;
 using System.Xml.Linq;
 using NUnit.Framework;
 
-namespace SewebarConnectTests
+namespace LMConnect.Web.Tests
 {
 	[TestFixture]
 	public class WebApiTests
 	{
-		private const string LMcloudServer = "http://localhost/SewebarConnect";
+		private const string LMcloudServer = "http://localhost/LMConnect";
 		private const string TestCasesPath = "TestCases";
 
 		private static WebClient _client;

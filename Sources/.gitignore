@@ -4,11 +4,6 @@
 # Custom files
 /LMConnect.Web/SVNDataAttribute.cs
 
-# TypeScripts
-node_modules
-*.js.map
-LMConnect.Client/*.js
-
 # User-specific files
 *.suo
 *.user

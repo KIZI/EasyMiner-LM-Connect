@@ -8,8 +8,8 @@
     <ProjectGuid>{AD698C23-EB88-4CB8-9FF5-3C05F73DE056}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SewebarConnectTests</RootNamespace>
-    <AssemblyName>SewebarConnectTests</AssemblyName>
+    <RootNamespace>LMConnect.Web.Tests</RootNamespace>
+    <AssemblyName>LMConnect.Web.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\Sources\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,13 +61,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Sources\LMWrapper\LMWrapper.csproj">
+    <ProjectReference Include="..\..\Sources\LMConnect\LMConnect.csproj">
       <Project>{98E96392-DCB6-4200-B18D-1891AE9FE604}</Project>
-      <Name>LMWrapper</Name>
+      <Name>LMConnect</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sources\SewebarConnect\SewebarConnect.csproj">
+    <ProjectReference Include="..\..\Sources\LMConnect.Web\LMConnect.Web.csproj">
       <Project>{c7e4493d-0f51-4150-a7d0-c67e9bbfbe44}</Project>
-      <Name>SewebarConnect</Name>
+      <Name>LMConnect.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

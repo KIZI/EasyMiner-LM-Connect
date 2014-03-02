@@ -1,9 +1,0 @@
-bin/
-obj/
-node_modules/
-Client.ts
-Client.js.map
-node.d.ts
-restify.d.ts
-*.csproj
-*.user

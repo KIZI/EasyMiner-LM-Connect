@@ -1,8 +1,8 @@
 ﻿using System.Xml.Linq;
-using LMWrapper.ODBC;
+using LMConnect.ODBC;
 using NUnit.Framework;
 
-namespace SewebarConnectTests.API.Requests.Application
+namespace LMConnect.Web.Tests.API.Requests.Application
 {
 	[TestFixture]
 	class RegistrationRequestTests
@@ -26,8 +26,8 @@ namespace SewebarConnectTests.API.Requests.Application
 
 			XDocument doc = XDocument.Parse(xml);
 
-			var dbConnection = SewebarConnect.API.Requests.Application.RegistrationRequest.GetDbConnection("Connection", doc);
-			var dbMetabase = SewebarConnect.API.Requests.Application.RegistrationRequest.GetDbConnection("Metabase", doc);
+			var dbConnection = Web.API.Requests.Application.RegistrationRequest.GetDbConnection("Connection", doc);
+			var dbMetabase = Web.API.Requests.Application.RegistrationRequest.GetDbConnection("Metabase", doc);
 
 			Assert.NotNull(dbConnection);
 			Assert.AreEqual(dbConnection.Type, OdbcDrivers.MySqlConnection);
