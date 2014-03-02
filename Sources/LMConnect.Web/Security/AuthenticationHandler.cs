@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace LMConnect.Web.Security
 {
@@ -30,7 +31,9 @@ namespace LMConnect.Web.Security
 				}
 
 				// set the principal
+				// http://stackoverflow.com/questions/12028604/how-can-i-safely-set-the-user-principal-in-a-custom-webapi-httpmessagehandler
 				Thread.CurrentPrincipal = principal;
+				HttpContext.Current.User = principal;
 			}
 			catch
 			{
