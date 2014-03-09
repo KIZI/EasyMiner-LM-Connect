@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using LMConnect.Client;
 
 namespace LMConnect.Console
 {
@@ -31,6 +33,9 @@ namespace LMConnect.Console
 				case "key":
 					ManageDatabase(command, parameters);
 					break;
+                case "client":
+			        RunClient(command, parameters).Wait();
+                    break;
 				default:
 					Help();
 					break;
@@ -41,7 +46,7 @@ namespace LMConnect.Console
 			System.Console.WriteLine("Done.");
 		}
 
-		private static void Help()
+	    private static void Help()
 		{
 			System.Console.WriteLine("Usage: {0} [module] [command] [arguments]", Path.GetFileName(Assembly.GetEntryAssembly().Location));
 			System.Console.WriteLine();
@@ -170,5 +175,27 @@ namespace LMConnect.Console
 		}
 
 		#endregion
-	}
+
+        #region Client
+
+        private static async Task RunClient(string command, string[] parameters)
+        {
+            try
+            {
+                var client = new LMConnect.Client.Client("http://localhost");
+
+                Miner result = await client.GetMinerAsync("P0YF0OFlXkW2fdy9HPZg5A");
+
+                System.Console.WriteLine("OK - {0}.", result.Id);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("NOK {0}.", ex.Message);
+            }
+
+            System.Console.ReadLine();
+        }
+
+        #endregion
+    }
 }

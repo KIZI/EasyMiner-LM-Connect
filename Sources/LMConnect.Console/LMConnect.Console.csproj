@@ -55,6 +55,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +72,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LMConnect.Client\LMConnect.Client.csproj">
+      <Project>{29636e50-b086-4d3f-9af4-03ca960f5cbb}</Project>
+      <Name>LMConnect.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LMConnect.Key\LMConnect.Key.csproj">
       <Project>{6ef009cc-e3d2-4e81-af8c-db13d8164587}</Project>
       <Name>LMConnect.Key</Name>

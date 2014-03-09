@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using LMConnect;
-using LMConnect.LISpMiner;
 using LMConnect.Web.API;
 using LMConnect.Web.API.Requests.Application;
 using LMConnect.Web.API.Responses.Application;
