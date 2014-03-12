@@ -1,34 +1,32 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using System.Web.Mvc;
 using NHibernate;
+using NHibernate.Context;
 
 namespace LMConnect.Web.Filters
 {
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-	public class NHibernateTransactionAttribute : NHibernateSessionAttribute, IExceptionFilter
+	public class NHibernateTransactionAttribute : ActionFilterAttribute, IExceptionFilter
 	{
-		private struct Void
+		protected ISessionFactory SessionFactory
 		{
+			get { return MvcApplication.SessionFactory; }
 		}
-
-		private readonly Task _completedTask = Task.FromResult<Void>(new Void());
 
 		protected ISession Session
 		{
 			get { return SessionFactory.GetCurrentSession(); }
 		}
 
-		public override void OnActionExecuting(HttpActionContext filterContext)
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
-			base.OnActionExecuting(filterContext);
+			ISession session = SessionFactory.OpenSession();
+			CurrentSessionContext.Bind(session);
 
 			Session.BeginTransaction();
 		}
 
-		public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+		public override void OnResultExecuted(ResultExecutedContext filterContext)
 		{
 			ITransaction tx = Session.Transaction;
 
@@ -37,10 +35,11 @@ namespace LMConnect.Web.Filters
 				Session.Transaction.Commit();
 			}
 
-			base.OnActionExecuted(actionExecutedContext);
+			ISession session = CurrentSessionContext.Unbind(SessionFactory);
+			session.Close();
 		}
 
-		public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+		public void OnException(ExceptionContext filterContext)
 		{
 			try
 			{
@@ -49,14 +48,15 @@ namespace LMConnect.Web.Filters
 				if (tx != null && tx.IsActive)
 				{
 					Session.Transaction.Rollback();
+
+					ISession session = CurrentSessionContext.Unbind(SessionFactory);
+					session.Close();
 				}
 			}
 			catch
 			{
 				// possibly no session...
 			}
-
-			return _completedTask;
 		}
 	}
 }

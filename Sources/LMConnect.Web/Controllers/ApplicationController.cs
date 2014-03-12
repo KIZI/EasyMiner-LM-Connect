@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using LMConnect.LISpMiner;
 using LMConnect.Web.API;
 using LMConnect.Web.Models;
+using LMConnect.WebApi.API;
 
 namespace LMConnect.Web.Controllers
 {
@@ -85,7 +85,7 @@ namespace LMConnect.Web.Controllers
 		#region Miners
 
 		[Authorize]
-		[Filters.Mvc.NHibernateTransaction]
+		[Filters.NHibernateTransaction]
 		public ActionResult Miners()
 		{
 			var miners = new List<MinerViewModel>();
@@ -108,7 +108,7 @@ namespace LMConnect.Web.Controllers
 		}
 
 		[Authorize]
-		[Filters.Mvc.NHibernateTransaction]
+		[Filters.NHibernateTransaction]
 		public ActionResult Miner()
 		{
 			return View(this.LISpMiner);
@@ -116,7 +116,7 @@ namespace LMConnect.Web.Controllers
 
 		[Authorize]
 		[ErrorHandler]
-		[Filters.Mvc.NHibernateTransaction]
+		[Filters.NHibernateTransaction]
 		public ActionResult Remove()
 		{
 			var miner = this.Repository.Query<LMConnect.Key.Miner>()

@@ -108,13 +108,13 @@
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.1\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.1\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.0.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.1\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -126,59 +126,19 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\console.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
-    <Content Include="Security\license.txt" />
     <Content Include="Views\Web.config" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\APIErrorHandlerAttribute.cs" />
     <Compile Include="API\ErrorHandlerAttribute.cs" />
-    <Compile Include="API\Exceptions\InvalidTaskResultXml.cs" />
-    <Compile Include="API\Exceptions\IXmlException.cs" />
-    <Compile Include="API\IFileResponse.cs" />
-    <Compile Include="API\Request.cs" />
-    <Compile Include="API\Requests\Application\NotRegisteredUser.cs" />
-    <Compile Include="API\Requests\Application\RegistrationRequest.cs" />
-    <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
-    <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskCancelationRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskUpdateRequest.cs" />
-    <Compile Include="API\Requests\Users\UserChangeCommitRequest.cs" />
-    <Compile Include="API\Requests\Users\UserChangeRequest.cs" />
-    <Compile Include="API\Requests\Users\UserRequest.cs" />
-    <Compile Include="API\Response.cs" />
-    <Compile Include="API\ResponseMediaTypeFormatter.cs" />
-    <Compile Include="API\Responses\Application\LISpMinerResponse.cs" />
-    <Compile Include="API\Responses\Application\RegistrationResponse.cs" />
-    <Compile Include="API\Responses\DataDictionary\ExportResponse.cs" />
-    <Compile Include="API\Responses\DataDictionary\ImportResponse.cs" />
-    <Compile Include="API\Responses\ExceptionResponse.cs" />
-    <Compile Include="API\Responses\Task\TaskResponse.cs" />
-    <Compile Include="API\Responses\Users\DatabaseResponse.cs" />
-    <Compile Include="API\Responses\Users\UserResponse.cs" />
-    <Compile Include="API\Responses\Users\UsersResponse.cs" />
-    <Compile Include="API\Responses\Users\UserUpdateResponse.cs" />
-    <Compile Include="API\Status.cs" />
     <Compile Include="API\XmlFileResult.cs" />
     <Compile Include="API\XmlResult.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SecurityConfig.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ApiBaseController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\ChangesController.cs" />
     <Compile Include="Controllers\ConsoleController.cs" />
-    <Compile Include="Controllers\DatabasesController.cs" />
-    <Compile Include="Controllers\DataDictionaryController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\MinersController.cs" />
-    <Compile Include="Controllers\TasksController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Filters\MVC\NHibernateTransactionAttribute.cs" />
-    <Compile Include="Filters\NHibernateSessionAttribute.cs" />
     <Compile Include="Filters\NHibernateTransactionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -186,12 +146,6 @@
     <Compile Include="Models\LogInViewModel.cs" />
     <Compile Include="Models\MinerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\AuthenticationConfiguration.cs" />
-    <Compile Include="Security\AuthenticationHandler.cs" />
-    <Compile Include="Security\AuthenticationOptions.cs" />
-    <Compile Include="Security\BasicAuthenticationSecurityTokenHandler.cs" />
-    <Compile Include="Security\HttpAuthentication.cs" />
-    <Compile Include="Security\SecurityExceptionFilter.cs" />
     <Compile Include="SVNDataAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -225,6 +179,10 @@
     <ProjectReference Include="..\LMConnect.Key\LMConnect.Key.csproj">
       <Project>{6ef009cc-e3d2-4e81-af8c-db13d8164587}</Project>
       <Name>LMConnect.Key</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LMConnect.WebApi\LMConnect.WebApi.csproj">
+      <Project>{c6963ae8-a539-4ecf-8d16-90ebb1c8087e}</Project>
+      <Name>LMConnect.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\LMConnect\LMConnect.csproj">
       <Project>{98e96392-dcb6-4200-b18d-1891ae9fe604}</Project>

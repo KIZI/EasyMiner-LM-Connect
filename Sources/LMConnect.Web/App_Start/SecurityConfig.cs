@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Http;
 using LMConnect.Key.Repositories;
-using LMConnect.Web.Security;
+using LMConnect.WebApi.Security;
 using NHibernate;
 
 namespace LMConnect.Web

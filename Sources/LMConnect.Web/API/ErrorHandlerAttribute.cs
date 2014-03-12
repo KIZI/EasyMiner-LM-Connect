@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using LMConnect.Web.API.Responses;
+using LMConnect.WebApi.API.Responses;
 using log4net;
 
 namespace LMConnect.Web.API

@@ -26,8 +26,8 @@ namespace LMConnect.Web.Tests.API.Requests.Application
 
 			XDocument doc = XDocument.Parse(xml);
 
-			var dbConnection = Web.API.Requests.Application.RegistrationRequest.GetDbConnection("Connection", doc);
-			var dbMetabase = Web.API.Requests.Application.RegistrationRequest.GetDbConnection("Metabase", doc);
+			var dbConnection = WebApi.API.Requests.Application.RegistrationRequest.GetDbConnection("Connection", doc);
+			var dbMetabase = WebApi.API.Requests.Application.RegistrationRequest.GetDbConnection("Metabase", doc);
 
 			Assert.NotNull(dbConnection);
 			Assert.AreEqual(dbConnection.Type, OdbcDrivers.MySqlConnection);

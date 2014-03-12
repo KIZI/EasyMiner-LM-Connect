@@ -24,7 +24,7 @@ namespace LMConnect.Web.Controllers
 		}
 
 		[HttpPost]
-		[Filters.Mvc.NHibernateTransaction]
+		[Filters.NHibernateTransaction]
 		public ActionResult Index(LogInViewModel model, string returnUrl)
 		{
 			if (this.ModelState.IsValid)

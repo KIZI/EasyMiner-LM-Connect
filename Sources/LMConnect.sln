@@ -24,6 +24,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C4EB4249
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.Client", "LMConnect.Client\LMConnect.Client.csproj", "{29636E50-B086-4D3F-9AF4-03CA960F5CBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMConnect.WebApi", "LMConnect.WebApi\LMConnect.WebApi.csproj", "{C6963AE8-A539-4ECF-8D16-90EBB1C8087E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{3AB0C403-9835-4165-9736-E7E6543B72F7}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +61,10 @@ Global
 		{29636E50-B086-4D3F-9AF4-03CA960F5CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29636E50-B086-4D3F-9AF4-03CA960F5CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29636E50-B086-4D3F-9AF4-03CA960F5CBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6963AE8-A539-4ECF-8D16-90EBB1C8087E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6963AE8-A539-4ECF-8D16-90EBB1C8087E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6963AE8-A539-4ECF-8D16-90EBB1C8087E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6963AE8-A539-4ECF-8D16-90EBB1C8087E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

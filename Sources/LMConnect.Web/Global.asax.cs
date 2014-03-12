@@ -123,11 +123,16 @@ namespace LMConnect.Web
 
 		protected void Application_Start()
 		{
+			ISessionManager sessionManager = new NHibernateSessionManager();
+			sessionManager.Configuration.CurrentSessionContext<WebSessionContext>();
+
+			SessionFactory = sessionManager.BuildSessionFactory();
+
 			AreaRegistration.RegisterAllAreas();
 
 			SecurityConfig.ConfigureGlobal(GlobalConfiguration.Configuration);
 
-			WebApiConfig.Register(GlobalConfiguration.Configuration);
+			WebApi.Config.Register(GlobalConfiguration.Configuration, SessionFactory, Environment);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 
@@ -136,11 +141,6 @@ namespace LMConnect.Web
 
 			// Load logging info
 			log4net.Config.XmlConfigurator.Configure();
-
-			ISessionManager sessionManager = new NHibernateSessionManager();
-			sessionManager.Configuration.CurrentSessionContext<WebSessionContext>();
-
-			SessionFactory = sessionManager.BuildSessionFactory();
 		}
 
 		protected void Application_Error(object sender, EventArgs e)
