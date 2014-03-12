@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using LMConnect.Client;
+using Microsoft.Owin.Hosting;
 
 namespace LMConnect.Console
 {
@@ -33,9 +34,12 @@ namespace LMConnect.Console
 				case "key":
 					ManageDatabase(command, parameters);
 					break;
-                case "client":
-			        RunClient(command, parameters).Wait();
-                    break;
+				case "client":
+					RunClient(command, parameters).Wait();
+					break;
+				case "server":
+					RunServer();
+					break;
 				default:
 					Help();
 					break;
@@ -46,9 +50,10 @@ namespace LMConnect.Console
 			System.Console.WriteLine("Done.");
 		}
 
-	    private static void Help()
+		private static void Help()
 		{
-			System.Console.WriteLine("Usage: {0} [module] [command] [arguments]", Path.GetFileName(Assembly.GetEntryAssembly().Location));
+			System.Console.WriteLine("Usage: {0} [module] [command] [arguments]",
+				Path.GetFileName(Assembly.GetEntryAssembly().Location));
 			System.Console.WriteLine();
 			System.Console.WriteLine("modules:");
 			System.Console.WriteLine("\tLM");
@@ -176,26 +181,43 @@ namespace LMConnect.Console
 
 		#endregion
 
-        #region Client
+		#region Client
 
-        private static async Task RunClient(string command, string[] parameters)
-        {
-            try
-            {
-                var client = new LMConnect.Client.Client("http://localhost");
+		private static async Task RunClient(string command, string[] parameters)
+		{
+			try
+			{
+				var client = new LMConnect.Client.Client("http://localhost");
 
-                Miner result = await client.GetMinerAsync("P0YF0OFlXkW2fdy9HPZg5A");
+				Miner result = await client.GetMinerAsync("P0YF0OFlXkW2fdy9HPZg5A");
 
-                System.Console.WriteLine("OK - {0}.", result.Id);
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine("NOK {0}.", ex.Message);
-            }
+				System.Console.WriteLine("OK - {0}.", result.Id);
+			}
+			catch (Exception ex)
+			{
+				System.Console.WriteLine("NOK {0}.", ex.Message);
+			}
 
-            System.Console.ReadLine();
-        }
+			System.Console.ReadLine();
+		}
 
-        #endregion
-    }
+		#endregion
+
+		#region Server
+
+		private static void RunServer()
+		{
+			const string baseAddress = "http://localhost:9000/";
+
+			// Start OWIN host 
+			using (WebApp.Start<Server>(url: baseAddress))
+			{
+				System.Console.WriteLine("Listening on {0}", baseAddress);
+
+				System.Console.ReadLine();
+			}
+		}
+
+		#endregion
+	}
 }
