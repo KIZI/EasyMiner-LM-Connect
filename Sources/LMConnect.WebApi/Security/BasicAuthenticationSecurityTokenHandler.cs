@@ -85,7 +85,8 @@ namespace LMConnect.WebApi.Security
 				throw new InvalidOperationException("No Configuration set");
 			}
 
-			UserNameSecurityToken unToken = token as UserNameSecurityToken;
+			var unToken = token as UserNameSecurityToken;
+
 			if (unToken == null)
 			{
 				throw new ArgumentException("SecurityToken is not a UserNameSecurityToken");

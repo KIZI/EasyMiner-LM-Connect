@@ -1,67 +1,24 @@
 ﻿using System;
-using System.Web;
-using LMConnect.WebApi.Controllers;
+using System.Runtime.Serialization;
 
 namespace LMConnect.WebApi.API.Requests.Users
 {
-	public class UserChangeRequest : Request
+	public class UserChangeRequest
 	{
-		public string Link
-		{
-			get
-			{
-				return this.HttpContext.Request["email_link"];
-			}
-		}
+		[DataMember(Name = "email_link")]
+		public string Link { get; set; }
 
-		public string NewEmail
-		{
-			get
-			{
-				return GetFromRequest("new_email");
-			}
-		}
+		[DataMember(Name = "new_email")]
+		public string NewEmail { get; set; }
 
-		public string NewUsername
-		{
-			get
-			{
-				return GetFromRequest("new_username");
-			}
-		}
+		[DataMember(Name = "new_username")]
+		public string NewUsername { get; set; }
 
-		public string NewPassword
-		{
-			get
-			{
-				return GetFromRequest("new_password");
-			}
-		}
+		[DataMember(Name = "new_password")]
+		public string NewPassword { get; set; }
 
-		public string EmailFrom
-		{
-			get
-			{
-				return this.HttpContext.Request["email_from"];
-			}
-		}
-
-		public UserChangeRequest(ApiBaseController controller)
-			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
-		{
-		}
-
-		private string GetFromRequest(string key)
-		{
-			string val = this.HttpContext.Request[key];
-
-			if (string.IsNullOrEmpty(val))
-			{
-				return null;
-			}
-
-			return val;
-		}
+		[DataMember(Name = "email_from")]
+		public string EmailFrom { get; set; }
 
 		public LMConnect.Key.UserPendingUpdate GetPendingUpdate(LMConnect.Key.User user)
 		{

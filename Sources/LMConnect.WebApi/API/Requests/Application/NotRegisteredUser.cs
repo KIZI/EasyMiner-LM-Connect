@@ -1,15 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Web;
 
 namespace LMConnect.WebApi.API.Requests.Application
 {
 	public class NotRegisteredUser
 	{
-		internal static NotRegisteredUser FromRequest(HttpRequestBase request)
+		internal static NotRegisteredUser FromRequest(HttpContentHeaders headers)
 		{
-			string basicAuthToken = request.Headers["Authorization"];
+			IEnumerable<string> auth;
 
+			if (headers.TryGetValues("Authorization", out auth))
+			{
+				return FromBasicAuthToken(auth.FirstOrDefault());
+			}
+
+			return null;
+		}
+
+		private static NotRegisteredUser FromBasicAuthToken(string basicAuthToken)
+		{
 			if (!string.IsNullOrEmpty(basicAuthToken))
 			{
 				basicAuthToken = basicAuthToken.Replace("Basic ", string.Empty);

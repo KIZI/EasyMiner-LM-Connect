@@ -1,6 +1,4 @@
-﻿using System.Web;
-using LMConnect.WebApi.API.Requests.Application;
-using LMConnect.WebApi.Controllers;
+﻿using System.Runtime.Serialization;
 
 namespace LMConnect.WebApi.API.Requests.Users
 {
@@ -8,67 +6,41 @@ namespace LMConnect.WebApi.API.Requests.Users
 	/// POST name=username1&password=pwd1&db_id=database1&db_password=uknown
 	/// TODO: UserRequest as XML
 	/// </summary>
-	public class UserRequest : Request
+	[DataContract]
+	public class UserRequest
 	{
-		public override string UserName
-		{
-			get { return this.HttpContext.Request["name"]; }
-		}
+		[DataMember(Name = "name")]
+		public string name { get; set; }
+		
+		[DataMember(Name = "password")]
+		public string Password { get; set; }
 
-		public override string Password
-		{
-			get { return this.HttpContext.Request["password"]; }
-		}
+		[DataMember(Name = "email")]
+		protected string Email { get; set; }
 
-		protected string Email
-		{
-			get { return this.HttpContext.Request["email"]; }
-		}
+		[DataMember(Name = "new_name")]
+		public string new_name { get; set; }
 
-		public string NewUserName
-		{
-			get { return this.HttpContext.Request["new_name"]; }
-		}
+		[DataMember(Name = "new_password")]
+		public string new_password { get; set; }
 
-		public string NewPassword
-		{
-			get { return this.HttpContext.Request["new_password"]; }
-		}
+		[DataMember(Name = "db_id")]
+		public string db_id { get; set; }
 
-		public string DbId
-		{
-			get { return this.HttpContext.Request["db_id"]; }
-		}
-
-		public string DbPassword
-		{
-			get { return this.HttpContext.Request["db_password"]; }
-		}
-
-		public NotRegisteredUser Owner
-		{
-			get
-			{
-				return NotRegisteredUser.FromRequest(this.HttpContext.Request);
-			}
-		}
-
-		public UserRequest(ApiBaseController controller)
-			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
-		{
-		}
+		[DataMember(Name = "db_password")]
+		public string db_password { get; set; }
 
 		public LMConnect.Key.Database GetDatabase(LMConnect.Key.User owner)
 		{
-			if (this.DbId == null)
+			if (this.db_id == null)
 			{
 				return null;
 			}
 
 			return new LMConnect.Key.Database
 				{
-					Name = this.DbId,
-					Password = this.DbPassword,
+					Name = this.db_id,
+					Password = this.db_password,
 					Owner = owner
 				};
 		}
@@ -77,7 +49,7 @@ namespace LMConnect.WebApi.API.Requests.Users
 		{
 			return new LMConnect.Key.User
 				{
-					Username = this.UserName,
+					Username = this.name,
 					Password = this.Password,
 					Email = this.Email
 				};

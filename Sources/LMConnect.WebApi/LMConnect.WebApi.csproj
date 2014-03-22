@@ -61,20 +61,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\APIErrorHandlerAttribute.cs" />
+    <Compile Include="API\ApiErrorHandlerAttribute.cs" />
     <Compile Include="API\Exceptions\InvalidTaskResultXml.cs" />
     <Compile Include="API\Exceptions\IXmlException.cs" />
     <Compile Include="API\IFileResponse.cs" />
     <Compile Include="API\Request.cs" />
     <Compile Include="API\Requests\Application\NotRegisteredUser.cs" />
     <Compile Include="API\Requests\Application\RegistrationRequest.cs" />
-    <Compile Include="API\Requests\DataDictionary\ExportRequest.cs" />
     <Compile Include="API\Requests\DataDictionary\ImportRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskCancelationRequest.cs" />
-    <Compile Include="API\Requests\Task\TaskInfoRequest.cs" />
     <Compile Include="API\Requests\Task\TaskRequest.cs" />
     <Compile Include="API\Requests\Task\TaskUpdateRequest.cs" />
-    <Compile Include="API\Requests\Users\UserChangeCommitRequest.cs" />
     <Compile Include="API\Requests\Users\UserChangeRequest.cs" />
     <Compile Include="API\Requests\Users\UserRequest.cs" />
     <Compile Include="API\Response.cs" />

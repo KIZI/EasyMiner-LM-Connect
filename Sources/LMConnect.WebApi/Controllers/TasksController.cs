@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -16,13 +17,13 @@ using log4net;
 namespace LMConnect.WebApi.Controllers
 {
 	[Authorize]
-	[APIErrorHandler]
 	public class TasksController : ApiBaseController
 	{
 		#region Private Helpers
 
 		private static readonly ILog log = LogManager.GetLogger(typeof(TasksController));
 		private const string DefaultTemplate = "4ftMiner.Task.Template.PMML";
+		private static readonly string InvalidChars = String.Format(@"[{0}]+", Regex.Escape(new string(Path.GetInvalidFileNameChars())));
 
 		protected ILog Log
 		{
@@ -99,14 +100,18 @@ namespace LMConnect.WebApi.Controllers
 			}
 		}
 
-		private TaskResponse RunTask(TaskDefinition definition)
+		public string GetTaskFileName(string taskName)
+		{
+			return Regex.Replace(taskName, InvalidChars, "_");
+		}
+
+		private TaskResponse RunTask(TaskDefinition definition, TaskRequest request, string template, string alias)
 		{
 			var exporter = this.LISpMiner.Exporter;
 			var importer = this.LISpMiner.Importer;
 
 			try
 			{
-				var request = new TaskRequest(this);
 				var response = new TaskResponse();
 
 				if (this.LISpMiner != null && request.Task != null)
@@ -115,11 +120,10 @@ namespace LMConnect.WebApi.Controllers
 					var numberOfRules = 0;
 					var hypothesesCountMax = Int32.MaxValue;
 
-					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
+					exporter.Output = string.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", this.DataFolder,
 													request.TaskFileName, DateTime.Now);
 
-					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
-													  request.GetTemplate(definition.DefaultTemplate));
+					exporter.Template = string.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath, template);
 
 					exporter.TaskName = request.TaskName;
 					exporter.NoEscapeSeqUnicode = true;
@@ -142,12 +146,17 @@ namespace LMConnect.WebApi.Controllers
 						Log.Debug(ex);
 
 						// import task
-						importer.Input = request.TaskPath;
+						var taskPath = string.Format("{0}/task_{1}_{2:yyyyMMdd-Hmmss}.xml",
+												   this.DataFolder,
+												   request.TaskFileName,
+												   DateTime.Now); ;
+
+						importer.Input = request.WriteTask(taskPath);
 						importer.NoCheckPrimaryKeyUnique = true;
 
-						if (!string.IsNullOrEmpty(request.Alias))
+						if (!string.IsNullOrEmpty(alias))
 						{
-							importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMExecutablesPath, request.Alias);
+							importer.Alias = String.Format(@"{0}\Sewebar\Template\{1}", importer.LMExecutablesPath, alias);
 						}
 
 						importer.Execute();
@@ -219,26 +228,26 @@ namespace LMConnect.WebApi.Controllers
 			}
 		}
 
-		private TaskResponse ExportTask(string taskName)
+		private TaskResponse ExportTask(string taskName, string template, string alias)
 		{
 			LMSwbExporter exporter = this.LISpMiner.Exporter;
 
 			try
 			{
-				var request = new TaskInfoRequest(this);
 				var response = new TaskResponse();
 
-				request.TaskName = taskName;
-
-				if (this.LISpMiner != null && request.TaskName != null)
+				if (this.LISpMiner != null && taskName != null)
 				{
-					exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml", request.DataFolder,
-													request.TaskFileName, DateTime.Now);
+					exporter.Output = string.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss}.xml",
+						this.DataFolder,
+						GetTaskFileName(taskName),
+						DateTime.Now);
 
-					exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
-													  request.GetTemplate(DefaultTemplate));
+					exporter.Template = string.Format(@"{0}\Sewebar\Template\{1}",
+						exporter.LMExecutablesPath,
+						template);
 
-					exporter.TaskName = request.TaskName;
+					exporter.TaskName = taskName;
 					exporter.NoEscapeSeqUnicode = true;
 
 					// try to export results
@@ -371,7 +380,7 @@ namespace LMConnect.WebApi.Controllers
 		#endregion
 
 		[Filters.NHibernateTransaction]
-		public Response Get(string taskName)
+		public Response Get(string taskName = null, string template = null, string alias = null)
 		{
 			CheckMinerOwnerShip();
 
@@ -382,12 +391,16 @@ namespace LMConnect.WebApi.Controllers
 			{
 				return this.GetAllTasks();
 			}
+			else
+			{
+				template = string.IsNullOrEmpty(template) ? DefaultTemplate : template;
 
-			return this.ExportTask(name);
+				return this.ExportTask(name, template, alias);
+			}
 		}
 
 		[Filters.NHibernateTransaction]
-		public TaskResponse Post(string taskType = "task")
+		public TaskResponse Post(TaskRequest request, string template = null, string alias = null, string taskType = "task")
 		{
 			CheckMinerOwnerShip();
 
@@ -397,20 +410,20 @@ namespace LMConnect.WebApi.Controllers
 					Launcher = this.GetTaskLauncher(taskType)
 				};
 
-			return this.RunTask(definition);
+			template = string.IsNullOrEmpty(template) ? DefaultTemplate : template;
+
+			return this.RunTask(definition, request, template, alias);
 		}
 
 		[Filters.NHibernateTransaction]
-		public Response Put(string taskType, string taskName)
+		public Response Put(TaskUpdateRequest request, string taskType = null, string taskName = null)
 		{
 			CheckMinerOwnerShip();
 
-			var request = new TaskUpdateRequest(this);
-			var specific = request.GetRequestType() as TaskCancelationRequest;
 			var hasTaskType = !string.IsNullOrEmpty(taskType);
 			var hasTaskName = !string.IsNullOrEmpty(taskName);
 
-			if (specific == null)
+			if (!request.IsCancelation)
 			{
 				throw new Exception("Unsupported task update request.");
 			}

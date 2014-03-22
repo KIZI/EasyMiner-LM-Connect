@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Http;
 using LMConnect.WebApi.API;
 using LMConnect.WebApi.API.Requests.Users;
@@ -7,7 +8,6 @@ using LMConnect.Key.Repositories;
 
 namespace LMConnect.WebApi.Controllers
 {
-	[APIErrorHandler]
 	public class ChangesController : ApiBaseController
 	{
 		[Filters.NHibernateTransaction]
@@ -26,10 +26,9 @@ namespace LMConnect.WebApi.Controllers
 		}
 
 		[Filters.NHibernateSession]
-		public Response Post(string username)
+		public Response Post(UserChangeRequest request, string username)
 		{
 			var repo = this.Repository as NHibernateRepository;
-			var request = new UserChangeRequest(this);
 
 			if (repo == null)
 			{
@@ -65,11 +64,10 @@ namespace LMConnect.WebApi.Controllers
 		}
 
 		[Filters.NHibernateTransaction]
-		public Response Put(string username)
+		public Response Put(string username, Guid code)
 		{
-			var request = new UserChangeCommitRequest();
-			var change = this.Repository.Query<LMConnect.Key.UserPendingUpdate>().
-				FirstOrDefault(c => c.Id == request.Id && c.User.Username == username);
+			var change = this.Repository.Query<LMConnect.Key.UserPendingUpdate>()
+				.FirstOrDefault(c => c.Id == code && c.User.Username == username);
 
 			if (change != null)
 			{

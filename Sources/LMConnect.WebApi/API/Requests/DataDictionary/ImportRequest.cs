@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Web;
-using LMConnect.WebApi.Controllers;
+using System.Net.Http;
 
 namespace LMConnect.WebApi.API.Requests.DataDictionary
 {
@@ -9,49 +8,34 @@ namespace LMConnect.WebApi.API.Requests.DataDictionary
 	{
 		private string _dataDictionary;
 
-		private string _dataDictionaryPath;
-
 		public string DataDictionary
 		{
 			get { return _dataDictionary ?? (_dataDictionary = ReadDataDictionary()); }
 		}
 
-		public string DataDictionaryPath
+		public ImportRequest(Stream input, HttpContent content)
+			: base(input, content)
 		{
-			get
-			{
-				if (String.IsNullOrEmpty(this._dataDictionaryPath))
-				{
-					this._dataDictionaryPath = String.Format(@"{0}/DataDictionary_{1:yyyyMMdd-Hmmss}.xml",
-					                                         this.DataFolder,
-					                                         DateTime.Now);
-				}
-
-				if (!File.Exists(this._dataDictionaryPath))
-				{
-					using (var file = File.CreateText(this._dataDictionaryPath))
-					{
-						file.Write(this.DataDictionary);
-						file.Close();
-					}
-				}
-
-				return this._dataDictionaryPath;
-			}
 		}
 
-		public ImportRequest(ApiBaseController controller)
-			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
+		public string WriteDataDictionary(string path)
 		{
+			if (!File.Exists(path))
+			{
+				using (var file = File.CreateText(path))
+				{
+					file.Write(this.DataDictionary);
+					file.Close();
+				}
+			}
+
+			return path;
 		}
 
 		private string ReadDataDictionary()
 		{
-			var stream = this.HttpContext.Request.InputStream;
-
-			using (var input = new StreamReader(stream))
+			using (var input = new StreamReader(this.InputStream))
 			{
-				stream.Position = 0;
 				return input.ReadToEnd();
 			}
 		}

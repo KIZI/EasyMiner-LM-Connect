@@ -7,7 +7,6 @@ using LMConnect.WebApi.API.Responses.Users;
 
 namespace LMConnect.WebApi.Controllers
 {
-	[APIErrorHandler]
 	[Authorize]
 	public class UsersController : ApiBaseController
 	{
@@ -47,12 +46,10 @@ namespace LMConnect.WebApi.Controllers
 		/// <returns>Registered UserResponse.</returns>
 		[Filters.NHibernateTransaction]
 		[AllowAnonymous]
-		public UserResponse Post()
+		public UserResponse Post(UserRequest request)
 		{
-			var request = new UserRequest(this);
-			
 			var user = this.Repository.Query<LMConnect.Key.User>()
-				.FirstOrDefault(u => u.Username == request.UserName && u.Password == request.Password);
+				.FirstOrDefault(u => u.Username == request.name && u.Password == request.Password);
 
 			if (user == null)
 			{
@@ -78,22 +75,21 @@ namespace LMConnect.WebApi.Controllers
 		/// </summary>
 		/// <returns>UserResponse.</returns>
 		[Filters.NHibernateTransaction]
-		public UserResponse Put()
+		public UserResponse Put(UserRequest request)
 		{
-			var request = new UserRequest(this);
 			var user = this.GetLMConnectUser();
 
-			if (user.Username == request.UserName)
+			if (user.Username == request.name)
 			{
 				// updating himself
-				if (!string.IsNullOrEmpty(request.NewUserName))
+				if (!string.IsNullOrEmpty(request.new_name))
 				{
-					user.Username = request.NewUserName;
+					user.Username = request.new_name;
 				}
 
-				if (!string.IsNullOrEmpty(request.NewPassword))
+				if (!string.IsNullOrEmpty(request.new_password))
 				{
-					user.Password = request.NewPassword;
+					user.Password = request.new_password;
 				}
 
 				this.Repository.Save(user);
@@ -104,7 +100,7 @@ namespace LMConnect.WebApi.Controllers
 			{
 				// updating by admin
 				LMConnect.Key.User modified = this.Repository.Query<LMConnect.Key.User>()
-									.FirstOrDefault(u => u.Username == request.UserName);
+									.FirstOrDefault(u => u.Username == request.name);
 
 				return this.ThrowHttpReponseException<UserResponse>(
 					"This feature is not yet implemented",
@@ -112,7 +108,7 @@ namespace LMConnect.WebApi.Controllers
 			}
 
 			return this.ThrowHttpReponseException<UserResponse>(
-				string.Format("User \"{0}\" not found or you are not auhtorized to modify him.", request.UserName),
+				string.Format("User \"{0}\" not found or you are not auhtorized to modify him.", request.name),
 				HttpStatusCode.NotFound);
 		}
 

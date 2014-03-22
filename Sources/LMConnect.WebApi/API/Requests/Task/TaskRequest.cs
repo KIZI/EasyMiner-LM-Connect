@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Xml;
 using System.Xml.XPath;
-using LMConnect.WebApi.Controllers;
 
 namespace LMConnect.WebApi.API.Requests.Task
 {
@@ -15,7 +14,6 @@ namespace LMConnect.WebApi.API.Requests.Task
 		private string _task;
 		private string _taskName;
 		private string _taskFileName;
-		private string _taskPath;
 
 		public string Task
 		{
@@ -65,65 +63,31 @@ namespace LMConnect.WebApi.API.Requests.Task
 			}
 		}
 
-		public string TaskPath
+		public TaskRequest(Stream input, HttpContent content)
+			: base(input, content)
 		{
-			get
-			{
-				if (String.IsNullOrEmpty(this._taskPath))
-				{
-					this._taskPath = String.Format("{0}/task_{1}_{2:yyyyMMdd-Hmmss}.xml",
-												   this.DataFolder,
-												   this.TaskFileName,
-												   DateTime.Now);
-				}
-
-				if(!File.Exists(this._taskPath))
-				{
-					// save importing task XML
-					using (var file = new StreamWriter(this._taskPath))
-					{
-						file.Write(this.Task);
-					}
-				}
-
-				return this._taskPath;
-			}
-		}
-
-		public string Alias
-		{
-			get
-			{
-				return this.HttpContext.Request["alias"];
-			}
-		}
-
-		public TaskRequest(ApiBaseController controller)
-			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
-		{
-		}
-
-		public string GetTemplate(string defaultValue)
-		{
-			var template = this.HttpContext.Request["template"];
-
-			if (string.IsNullOrEmpty(template))
-			{
-				return defaultValue;
-			}
-
-			return template;
 		}
 
 		private string ReadTask()
 		{
-			var stream = this.HttpContext.Request.InputStream;
-
-			using (var input = new StreamReader(stream))
+			using (var input = new StreamReader(this.InputStream))
 			{
-				stream.Position = 0;
 				return input.ReadToEnd();
 			}
+		}
+
+		public string WriteTask(string taskPath)
+		{
+			if (!File.Exists(taskPath))
+			{
+				// save importing task XML
+				using (var file = new StreamWriter(taskPath))
+				{
+					file.Write(this.Task);
+				}
+			}
+
+			return taskPath;
 		}
 	}
 }

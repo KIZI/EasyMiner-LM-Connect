@@ -18,23 +18,37 @@ namespace LMConnect.WebApi.Filters
 
 		protected ISession Session
 		{
-			get { return SessionFactory.GetCurrentSession(); }
+			get
+			{
+				if (NHibernate.Context.CurrentSessionContext.HasBind(SessionFactory))
+				{
+					return SessionFactory.GetCurrentSession();
+				}
+
+				return null;
+			}
 		}
 
 		public override void OnActionExecuting(HttpActionContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
 
-			Session.BeginTransaction();
+			if (Session != null)
+			{
+				Session.BeginTransaction();
+			}
 		}
 
 		public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
 		{
-			ITransaction tx = Session.Transaction;
-
-			if (tx != null && tx.IsActive)
+			if (Session != null)
 			{
-				Session.Transaction.Commit();
+				ITransaction tx = Session.Transaction;
+
+				if (tx != null && tx.IsActive)
+				{
+					Session.Transaction.Commit();
+				}
 			}
 
 			base.OnActionExecuted(actionExecutedContext);
@@ -42,7 +56,7 @@ namespace LMConnect.WebApi.Filters
 
 		public Task ExecuteExceptionFilterAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
 		{
-			try
+			if (Session != null)
 			{
 				ITransaction tx = Session.Transaction;
 
@@ -50,10 +64,6 @@ namespace LMConnect.WebApi.Filters
 				{
 					Session.Transaction.Rollback();
 				}
-			}
-			catch
-			{
-				// possibly no session...
 			}
 
 			return _completedTask;

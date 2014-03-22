@@ -10,7 +10,6 @@ using LMConnect.WebApi.API.Responses.DataDictionary;
 namespace LMConnect.WebApi.Controllers
 {
 	[Authorize]
-	[APIErrorHandler]
 	public class DataDictionaryController : ApiBaseController
 	{
 		private void CheckMinerOwnerShip()
@@ -26,21 +25,21 @@ namespace LMConnect.WebApi.Controllers
 		}
 
 		[Filters.NHibernateTransaction]
-		public ExportResponse Get()
+		public ExportResponse Get(string matrix = null, string template = null)
 		{
 			CheckMinerOwnerShip();
 
-			var request = new ExportRequest(this);
+			matrix = string.IsNullOrEmpty(matrix) ? "Loans" : matrix;
+			template = string.IsNullOrEmpty(template) ? "LMDataSource.Matrix.ARD.Template.PMML" : template;
 
 			var response = new ExportResponse();
 
 			var exporter = this.LISpMiner.Exporter;
 			exporter.NoAttributeDisctinctValues = true;
 			exporter.NoEscapeSeqUnicode = true;
-			exporter.MatrixName = request.MatrixName;
-			exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss.fff}.xml", request.DataFolder, "DD", DateTime.Now);
-			exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath,
-											  request.GetTemplate("LMDataSource.Matrix.ARD.Template.PMML"));
+			exporter.MatrixName = matrix;
+			exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss.fff}.xml", this.DataFolder, "DD", DateTime.Now);
+			exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath, template);
 			exporter.Execute();
 
 			response.Status = Status.Success;
@@ -50,11 +49,9 @@ namespace LMConnect.WebApi.Controllers
 		}
 
 		[Filters.NHibernateTransaction]
-		public ImportResponse Put()
+		public ImportResponse Put(ImportRequest request)
 		{
 			CheckMinerOwnerShip();
-
-			var request = new ImportRequest(this);
 
 			var response = new ImportResponse
 				{
@@ -63,8 +60,12 @@ namespace LMConnect.WebApi.Controllers
 
 			if (this.LISpMiner != null && request.DataDictionary != null)
 			{
+				var dataDictionaryPath = string.Format(@"{0}/DataDictionary_{1:yyyyMMdd-Hmmss}.xml",
+														 this.DataFolder,
+														 DateTime.Now);
+
 				LMSwbImporter importer = this.LISpMiner.Importer;
-				importer.Input = request.DataDictionaryPath;
+				importer.Input = request.WriteDataDictionary(dataDictionaryPath);
 				importer.NoCheckPrimaryKeyUnique = false;
 				importer.Execute();
 

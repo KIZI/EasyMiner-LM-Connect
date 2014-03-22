@@ -9,7 +9,6 @@ using LMConnect.WebApi.API.Responses.Application;
 namespace LMConnect.WebApi.Controllers
 {
 	[Authorize]
-	[APIErrorHandler]
 	public class MinersController : ApiBaseController
 	{
 		private void CheckMinerOwnerShip()
@@ -45,9 +44,8 @@ namespace LMConnect.WebApi.Controllers
 
 		[AllowAnonymous]
 		[Filters.NHibernateTransaction]
-		public RegistrationResponse Post()
+		public RegistrationResponse Post(RegistrationRequest request)
 		{
-			var request = new RegistrationRequest();
 			var id = ShortGuid.NewGuid();
 			var user = this.GetLMConnectUser();
 			var miner = new LISpMiner.LISpMiner(Config.Environment, id.ToString(), request.DbConnection, request.Metabase, request.SharedBinaries);

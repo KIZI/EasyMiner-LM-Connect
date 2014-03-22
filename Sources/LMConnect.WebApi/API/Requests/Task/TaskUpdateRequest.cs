@@ -1,35 +1,37 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Net.Http;
 using System.Xml.Linq;
-using LMConnect.WebApi.Controllers;
 
 namespace LMConnect.WebApi.API.Requests.Task
 {
     public class TaskUpdateRequest : Request
     {
-        public ApiBaseController Controller { get; private set; }
         private XDocument _buffer;
 
-        public TaskUpdateRequest(ApiBaseController controller)
-			: base(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
+		internal bool IsCancelation
+		{
+			get
+			{
+				var doc = this.GetRequest();
+
+				if (doc.Root != null && doc.Root.Name == "CancelationRequest")
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+	    public TaskUpdateRequest(Stream stream, HttpContent content)
+			: base(stream, content)
+	    {
+		    
+	    }
+
+	    private XDocument GetRequest()
         {
-            Controller = controller;
-        }
-
-        internal Request GetRequestType()
-        {
-            var doc = this.GetRequest();
-
-            if (doc.Root != null && doc.Root.Name == "CancelationRequest")
-            {
-                return new TaskCancelationRequest(this);
-            }
-
-            return null;
-        }
-
-        private XDocument GetRequest()
-        {
-            return _buffer ?? (_buffer = XDocument.Load(this.HttpContext.Request.InputStream));
+            return _buffer ?? (_buffer = XDocument.Load(this.InputStream));
         }
     }
 }

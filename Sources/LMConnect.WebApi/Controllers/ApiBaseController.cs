@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -50,6 +51,21 @@ namespace LMConnect.WebApi.Controllers
 				}
 
 				return this._miner;
+			}
+		}
+
+		protected string DataFolder
+		{
+			get
+			{
+				var dataFolder = string.Format("{0}/xml", this.LISpMiner.LMPrivatePath);
+
+				if (!Directory.Exists(dataFolder))
+				{
+					Directory.CreateDirectory(dataFolder);
+				}
+
+				return dataFolder;
 			}
 		}
 

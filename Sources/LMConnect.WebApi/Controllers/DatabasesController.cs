@@ -2,12 +2,12 @@
 using System.Net;
 using System.Web.Http;
 using LMConnect.WebApi.API;
+using LMConnect.WebApi.API.Requests.Application;
 using LMConnect.WebApi.API.Requests.Users;
 using LMConnect.WebApi.API.Responses.Users;
 
 namespace LMConnect.WebApi.Controllers
 {
-	[APIErrorHandler]
 	[Authorize]
 	public class DatabasesController : ApiBaseController
 	{
@@ -48,15 +48,14 @@ namespace LMConnect.WebApi.Controllers
 		/// <returns>Created database.</returns>
 		[AllowAnonymous]
 		[Filters.NHibernateTransaction]
-		public DatabaseResponse Post(string username)
+		public DatabaseResponse Post(UserRequest request, string username)
 		{
-			var request = new UserRequest(this);
 			var user = this.GetLMConnectUser();
 			var database = request.GetDatabase(user);
 
 			if (user == null)
 			{
-				var owner = request.Owner;
+				var owner = NotRegisteredUser.FromRequest(this.Request.Content.Headers);
 
 				if (owner != null)
 				{
@@ -94,14 +93,13 @@ namespace LMConnect.WebApi.Controllers
 		/// <summary>
 		/// Updates password for given database.
 		/// </summary>
+		/// <param name="request">User data from request.</param>
 		/// <param name="username">Owner's username.</param>
 		/// <param name="id">Database identification.</param>
 		/// <returns>Upated database.</returns>
 		[Filters.NHibernateTransaction]
-		public DatabaseResponse Put(string username, string id)
+		public DatabaseResponse Put(UserRequest request, string username, string id)
 		{
-			var request = new UserRequest(this);
-			
 			if (this.User.Identity.Name == username || this.User.IsInRole("admin"))
 			{
 				LMConnect.Key.Database database = this.Repository.Query<LMConnect.Key.Database>()
@@ -109,7 +107,7 @@ namespace LMConnect.WebApi.Controllers
 
 				if (database != null)
 				{
-					database.Password = request.DbPassword;
+					database.Password = request.db_password;
 
 					this.Repository.Save(database);
 

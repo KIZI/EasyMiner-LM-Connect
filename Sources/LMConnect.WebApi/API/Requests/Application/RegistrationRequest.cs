@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Xml.Linq;
 using LMConnect.ODBC;
 
@@ -11,6 +13,7 @@ namespace LMConnect.WebApi.API.Requests.Application
 		private XDocument _buffer;
 		private DbConnection _dbConnection;
 		private DbConnection _dbMetabase;
+		private readonly HttpContentHeaders _headers;
 
 		public static DbConnection GetDbConnection(string which, XDocument requestBody)
 		{
@@ -104,20 +107,18 @@ namespace LMConnect.WebApi.API.Requests.Application
 
 		public NotRegisteredUser Owner
 		{
-			get
-			{
-				return NotRegisteredUser.FromRequest(this.HttpContext.Request);
-			}
+			get { return NotRegisteredUser.FromRequest(this._headers); }
 		}
 
-		public RegistrationRequest()
-			: base(new HttpContextWrapper(System.Web.HttpContext.Current))
+		public RegistrationRequest(Stream input, HttpContent content)
+			: base(input, content)
 		{
+			this._headers = content.Headers;
 		}
 
 		private XDocument GetRequest()
 		{
-			return _buffer ?? (_buffer = XDocument.Load(this.HttpContext.Request.InputStream));
+			return _buffer ?? (_buffer = XDocument.Load(this.InputStream));
 		}
 	}
 }

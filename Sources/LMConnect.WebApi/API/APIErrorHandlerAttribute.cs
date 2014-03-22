@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http.Filters;
 using LMConnect.WebApi.API.Responses;
 using log4net;
 
 namespace LMConnect.WebApi.API
 {
-	public class APIErrorHandlerAttribute : ExceptionFilterAttribute
+	public class ApiErrorHandlerAttribute : ExceptionFilterAttribute
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof(APIErrorHandlerAttribute));
+		private static readonly ILog Log = LogManager.GetLogger(typeof(ApiErrorHandlerAttribute));
 
 		private HttpStatusCode _statusCode = HttpStatusCode.InternalServerError;
 
@@ -35,19 +34,10 @@ namespace LMConnect.WebApi.API
 			}
 
 			Exception exception = filterContext.Exception;
-			ExceptionResponse exceptionResponse = new ExceptionResponse(exception);
+			var exceptionResponse = new ExceptionResponse(exception);
 
 			Log.Error(exception);
-
-			// If this is not an HTTP 500 (for example, if somebody throws an HTTP 404 from an action method), 
-			// ignore it.
-			if (new HttpException(null, exception).GetHttpCode() != (int)HttpStatusCode.InternalServerError)
-			{
-				// return;
-			}
-
-			// TODO: test if works
-			// var response = filterContext.Request.CreateResponse(this.StatusCode, exceptionResponse);
+			
 			var response = new HttpResponseMessage
 				{
 					StatusCode = this.StatusCode,
@@ -55,7 +45,8 @@ namespace LMConnect.WebApi.API
 					// response.ContentType = "application/xml"
 				};
 
-			filterContext.Response = response;
+			// TODO: test if works, otherwise use reposne above
+			filterContext.Response = filterContext.Request.CreateResponse(this.StatusCode, exceptionResponse);
 		}
 	}
 }

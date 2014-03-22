@@ -34,10 +34,10 @@ namespace LMConnect.WebApi.Security
 				// http://stackoverflow.com/questions/12028604/how-can-i-safely-set-the-user-principal-in-a-custom-webapi-httpmessagehandler
 				Thread.CurrentPrincipal = principal;
 
-			    if (HttpContext.Current != null)
-			    {
-			        HttpContext.Current.User = principal;
-			    }
+				if (HttpContext.Current != null)
+				{
+					HttpContext.Current.User = principal;
+				}
 			}
 			catch
 			{
@@ -47,7 +47,7 @@ namespace LMConnect.WebApi.Security
 					SetAuthenticateHeader(response);
 
 					return response;
-				});
+				}, cancellationToken);
 			}
 
 			return base.SendAsync(request, cancellationToken).ContinueWith(
@@ -61,7 +61,7 @@ namespace LMConnect.WebApi.Security
 					}
 
 					return response;
-				});
+				}, cancellationToken);
 		}
 
 		private void SetAuthenticateHeader(HttpResponseMessage response)

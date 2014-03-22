@@ -1,61 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Web;
-using LMConnect.WebApi.Controllers;
+﻿using System.IO;
+using System.Net.Http;
 
 namespace LMConnect.WebApi.API
 {
 	public class Request
 	{
-		private string _dataFolder;
+		protected readonly Stream InputStream;
 
-		public string DataFolder
+		/// <summary>
+		/// Called from <see cref="ResponseMediaTypeFormatter" /> via Activator.CreateInstance.
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="content"></param>
+		protected Request(Stream input, HttpContent content)
 		{
-			get
-			{
-				if (!Directory.Exists(this._dataFolder))
-				{
-					Directory.CreateDirectory(this._dataFolder);
-				}
-
-				return _dataFolder;
-			}
-			private set { _dataFolder = value; }
-		}
-
-		public virtual string UserName
-		{
-			get { return this.HttpContext.Request["username"]; }
-		}
-
-		public virtual string Password
-		{
-			get { return this.HttpContext.Request["password"]; }
-		}
-
-		public LISpMiner.LISpMiner LISpMiner { get; private set; }
-
-		public HttpContextBase HttpContext { get; private set; }
-
-		public Request(LISpMiner.LISpMiner miner, HttpContextBase httpContext)
-			: this(httpContext)
-		{
-			if (miner != null)
-			{
-				this.DataFolder = String.Format("{0}/xml", miner.LMPrivatePath);
-
-				this.LISpMiner = miner;
-			}
-		}
-
-		public Request(ApiBaseController controller)
-			: this(controller.LISpMiner, new HttpContextWrapper(System.Web.HttpContext.Current))
-		{
-		}
-
-		public Request(HttpContextBase httpContext)
-		{
-			this.HttpContext = httpContext;
+			this.InputStream = input;
 		}
 	}
 }
