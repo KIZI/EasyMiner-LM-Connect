@@ -61,6 +61,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Sources\LMConnect.Client\LMConnect.Client.csproj">
+      <Project>{29636e50-b086-4d3f-9af4-03ca960f5cbb}</Project>
+      <Name>LMConnect.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Sources\LMConnect.WebApi\LMConnect.WebApi.csproj">
       <Project>{c6963ae8-a539-4ecf-8d16-90ebb1c8087e}</Project>
       <Name>LMConnect.WebApi</Name>
