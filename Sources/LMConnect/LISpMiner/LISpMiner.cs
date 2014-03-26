@@ -6,13 +6,8 @@ using OdbcConnection = LMConnect.ODBC.OdbcConnection;
 
 namespace LMConnect.LISpMiner
 {
-	public class LISpMiner : IDisposable
+	public partial class LISpMiner : IDisposable
 	{
-		private LMSwbImporter _importer;
-		private LMSwbExporter _exporter;
-		private LMTaskPooler _lmTaskPooler;
-		private LMProcPooler _lmProcPooler;
-		private LMGridPooler _lmGridPooler;
 		private Version _version;
 
 		internal static string GetMinerPath(Environment environment, string minerId)
@@ -42,19 +37,6 @@ namespace LMConnect.LISpMiner
 
 		public AccessConnection Metabase { get; protected set; }
 
-		internal string LMExecutablesPath
-		{
-			get
-			{
-				if (this.SharedPool)
-				{
-					return this.Environment.LMPath;
-				}
-
-				return this.LMPrivatePath;
-			}
-		}
-
 		public string LMPrivatePath { get; private set; }
 
 		public Version Version
@@ -70,84 +52,22 @@ namespace LMConnect.LISpMiner
 			}
 		}
 
-		public LMSwbImporter Importer
-		{
-			get
-			{
-				if (this._importer == null)
-				{
-					this._importer = new LMSwbImporter(this, this.Metabase.ConnectionString, this.LMPrivatePath);
-				}
-
-				return this._importer;
-			}
-
-			set { this._importer = value; }
-		}
-
-		public LMSwbExporter Exporter
-		{
-			get
-			{
-				if (this._exporter == null)
-				{
-					this._exporter = new LMSwbExporter(this, this.Metabase.ConnectionString, this.LMPrivatePath);
-				}
-
-				return this._exporter;
-			}
-
-			set { this._exporter = value; }
-		}
-
-		public LMTaskPooler LMTaskPooler
-		{
-			get
-			{
-				if (this._lmTaskPooler == null)
-				{
-					this._lmTaskPooler = new LMTaskPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath);
-				}
-
-				return this._lmTaskPooler;
-			}
-
-			set { this._lmTaskPooler = value; }
-		}
-
-		public LMProcPooler LMProcPooler
-		{
-			get
-			{
-				if (this._lmProcPooler == null)
-				{
-					this._lmProcPooler = new LMProcPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath);
-				}
-
-				return this._lmProcPooler;
-			}
-
-			set { this._lmProcPooler = value; }
-		}
-
-		public LMGridPooler LMGridPooler
-		{
-			get
-			{
-				if (this._lmGridPooler == null)
-				{
-					this._lmGridPooler = new LMGridPooler(this, this.Metabase.ConnectionString, this.LMPrivatePath, this.Environment.PCGridSettings);
-				}
-
-				return this._lmGridPooler;
-			}
-
-			set { this._lmGridPooler = value; }
-		}
-
 		public bool SharedPool { get; private set; }
 
-		internal Environment Environment { get; set; }
+		internal Environment Environment { get; private set; }
+
+		internal string LMExecutablesPath
+		{
+			get
+			{
+				if (this.SharedPool)
+				{
+					return this.Environment.LMPath;
+				}
+
+				return this.LMPrivatePath;
+			}
+		}
 
 		#endregion
 
@@ -299,7 +219,7 @@ namespace LMConnect.LISpMiner
 
 			if (!File.Exists(versionPath))
 			{
-				var exporter = this.Exporter;
+				var exporter = this.CreateExporter();
 
 				if (exporter.Status == ExecutableStatus.Ready)
 				{
@@ -333,7 +253,7 @@ namespace LMConnect.LISpMiner
 
 		public string GetTaskList()
 		{
-			var exporter = this.Exporter;
+			var exporter = this.CreateExporter();
 			var tasksFile = String.Format("{0}/LMTaskSurvey_{1:yyyyMMdd-Hmmss}.txt", exporter.LMExecutablesPath, DateTime.Now);
 
 			if (exporter.Status == ExecutableStatus.Ready)

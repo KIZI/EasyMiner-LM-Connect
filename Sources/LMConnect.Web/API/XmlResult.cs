@@ -40,10 +40,7 @@ namespace LMConnect.Web.API
 
 			if (this.Data != null)
 			{
-				using (var w = new StreamWriter(response.OutputStream))
-				{
-					w.Write(this.Data.Write());
-				}
+				this.Data.WriteToStream(response.OutputStream);
 			}
 		}
 	}

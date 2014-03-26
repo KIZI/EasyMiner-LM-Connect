@@ -4,8 +4,7 @@ using System.Net;
 using System.Web.Http;
 using LMConnect.LISpMiner;
 using LMConnect.WebApi.API;
-using LMConnect.WebApi.API.Requests.DataDictionary;
-using LMConnect.WebApi.API.Responses.DataDictionary;
+using LMConnect.WebApi.API.DataDictionary;
 
 namespace LMConnect.WebApi.Controllers
 {
@@ -29,53 +28,31 @@ namespace LMConnect.WebApi.Controllers
 		{
 			CheckMinerOwnerShip();
 
-			matrix = string.IsNullOrEmpty(matrix) ? "Loans" : matrix;
-			template = string.IsNullOrEmpty(template) ? "LMDataSource.Matrix.ARD.Template.PMML" : template;
-
-			var response = new ExportResponse();
-
-			var exporter = this.LISpMiner.Exporter;
-			exporter.NoAttributeDisctinctValues = true;
-			exporter.NoEscapeSeqUnicode = true;
-			exporter.MatrixName = matrix;
-			exporter.Output = String.Format("{0}/results_{1}_{2:yyyyMMdd-Hmmss.fff}.xml", this.DataFolder, "DD", DateTime.Now);
-			exporter.Template = String.Format(@"{0}\Sewebar\Template\{1}", exporter.LMExecutablesPath, template);
-			exporter.Execute();
-
-			response.Status = Status.Success;
-			response.OutputFilePath = exporter.Output;
-
-			return response;
+			return new ExportResponse
+			{
+				Status = Status.Success,
+				OutputFilePath = this.LISpMiner.ExportDataDictionary(matrix, template)
+			};
 		}
 
 		[Filters.NHibernateTransaction]
 		public ImportResponse Put(ImportRequest request)
 		{
-			CheckMinerOwnerShip();
-
-			var response = new ImportResponse
-				{
-					Id = this.LISpMiner.Id
-				};
-
-			if (this.LISpMiner != null && request.DataDictionary != null)
+			if (request == null || request.DataDictionary == null)
 			{
-				var dataDictionaryPath = string.Format(@"{0}/DataDictionary_{1:yyyyMMdd-Hmmss}.xml",
-														 this.DataFolder,
-														 DateTime.Now);
-
-				LMSwbImporter importer = this.LISpMiner.Importer;
-				importer.Input = request.WriteDataDictionary(dataDictionaryPath);
-				importer.NoCheckPrimaryKeyUnique = false;
-				importer.Execute();
-
-				response.Message = String.Format("Data Dictionary imported to {0}", importer.LISpMiner.Id);
-				response.Status = Status.Success;
-
-				return response;
+				throw new ArgumentException("No DataDictionary given.");
 			}
 
-			throw new Exception("No DataDictionary given.");
+			CheckMinerOwnerShip();
+
+			this.LISpMiner.ImportDataDictionary(request.DataDictionary);
+
+			return new ImportResponse
+			{
+				Id = this.LISpMiner.Id,
+				Message = String.Format("Data Dictionary imported to {0}", this.LISpMiner.Id),
+				Status = Status.Success
+			};
 		}
 	}
 }

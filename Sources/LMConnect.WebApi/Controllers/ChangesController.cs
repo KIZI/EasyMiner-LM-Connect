@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Web.Http;
 using LMConnect.WebApi.API;
-using LMConnect.WebApi.API.Requests.Users;
-using LMConnect.WebApi.API.Responses.Users;
 using LMConnect.Key.Repositories;
+using LMConnect.WebApi.API.Users;
 
 namespace LMConnect.WebApi.Controllers
 {

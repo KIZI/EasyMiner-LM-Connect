@@ -12,7 +12,7 @@ namespace LMConnect.WebApi.API
 		[DataMember(Name = "message")]
 		public string Message { get; set; }
 
-		[DataMember(Name = "Status")]
+		[DataMember(Name = "status")]
 		public Status Status { get; set; }
 
 		public Response()
@@ -45,16 +45,11 @@ namespace LMConnect.WebApi.API
 			return new XElement("message", this.Message);
 		}
 
-		public virtual string Write()
+		public virtual void WriteToStream(Stream m)
 		{
-			using (var m = new MemoryStream())
+			using (var sw = new XmlTextWriter(m, Encoding.UTF8))
 			{
-				using (var sw = new XmlTextWriter(m, Encoding.UTF8))
-				{
-					this.XDocument.Save(sw);
-				}
-
-				return Encoding.UTF8.GetString(m.ToArray());
+				this.XDocument.Save(sw);
 			}
 		}
 	}

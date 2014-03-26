@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using LMConnect.WebApi.API;
+using LMConnect.WebApi.Formatters;
 using NHibernate;
 
 namespace LMConnect.WebApi
@@ -38,6 +39,7 @@ namespace LMConnect.WebApi
 
 			config.Formatters.Remove(config.Formatters.JsonFormatter);
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
+			config.Formatters.Add(new RequestMediaTypeFormatter());
 			config.Formatters.Add(new ResponseMediaTypeFormatter());
 
 			config.Filters.Add(new ApiErrorHandlerAttribute());

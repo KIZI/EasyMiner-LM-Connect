@@ -141,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ErrorHandlerAttribute.cs" />
-    <Compile Include="API\XmlFileResult.cs" />
     <Compile Include="API\XmlResult.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

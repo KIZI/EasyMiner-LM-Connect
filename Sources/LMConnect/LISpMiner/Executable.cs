@@ -5,7 +5,7 @@ using log4net;
 
 namespace LMConnect.LISpMiner
 {
-	public abstract class Executable
+	public abstract class Executable : IDisposable
 	{
 		protected static readonly ILog ExecutableLog = LogManager.GetLogger(typeof(Executable));
 
@@ -103,6 +103,10 @@ namespace LMConnect.LISpMiner
 			}
 
 			this._stopwatch.Reset();
+		}
+
+		public virtual void Dispose()
+		{
 		}
 	}
 }

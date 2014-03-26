@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using LMConnect.ODBC;
+using LMConnect.WebApi.API.Miners;
 using NUnit.Framework;
 
 namespace LMConnect.Web.Tests.API.Requests.Application
@@ -26,8 +27,8 @@ namespace LMConnect.Web.Tests.API.Requests.Application
 
 			XDocument doc = XDocument.Parse(xml);
 
-			var dbConnection = WebApi.API.Requests.Application.RegistrationRequest.GetDbConnection("Connection", doc);
-			var dbMetabase = WebApi.API.Requests.Application.RegistrationRequest.GetDbConnection("Metabase", doc);
+			var dbConnection = RegistrationRequest.GetDbConnection("Connection", doc);
+			var dbMetabase = RegistrationRequest.GetDbConnection("Metabase", doc);
 
 			Assert.NotNull(dbConnection);
 			Assert.AreEqual(dbConnection.Type, OdbcDrivers.MySqlConnection);

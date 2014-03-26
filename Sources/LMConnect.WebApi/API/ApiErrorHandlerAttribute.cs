@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
-using LMConnect.WebApi.API.Responses;
 using log4net;
 
 namespace LMConnect.WebApi.API
@@ -38,14 +37,6 @@ namespace LMConnect.WebApi.API
 
 			Log.Error(exception);
 			
-			var response = new HttpResponseMessage
-				{
-					StatusCode = this.StatusCode,
-					Content = new StringContent(exceptionResponse.Write())
-					// response.ContentType = "application/xml"
-				};
-
-			// TODO: test if works, otherwise use reposne above
 			filterContext.Response = filterContext.Request.CreateResponse(this.StatusCode, exceptionResponse);
 		}
 	}

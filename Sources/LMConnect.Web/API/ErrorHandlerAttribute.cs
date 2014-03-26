@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using LMConnect.WebApi.API.Responses;
+using LMConnect.WebApi.API;
 using log4net;
 
 namespace LMConnect.Web.API
@@ -62,13 +62,10 @@ namespace LMConnect.Web.API
 			filterContext.HttpContext.Response.StatusCode = (int)this.StatusCode;
 			filterContext.HttpContext.Response.ContentType = "application/xml";
 
-			using (var stream = new StreamWriter(filterContext.HttpContext.Response.OutputStream))
-			{
-				var response = new ExceptionResponse(exception);
+			var response = new ExceptionResponse(exception);
 
-				stream.Write(response.Write());
-			}
-
+			response.WriteToStream(filterContext.HttpContext.Response.OutputStream);
+			
 			// Certain versions of IIS will sometimes use their own error page when 
 			// they detect a server error. Setting this property indicates that we
 			// want it to try to render ASP.NET MVC's error page instead.

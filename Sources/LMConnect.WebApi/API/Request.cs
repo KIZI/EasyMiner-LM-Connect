@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using LMConnect.WebApi.Formatters;
 
 namespace LMConnect.WebApi.API
 {
@@ -8,7 +9,7 @@ namespace LMConnect.WebApi.API
 		protected readonly Stream InputStream;
 
 		/// <summary>
-		/// Called from <see cref="ResponseMediaTypeFormatter" /> via Activator.CreateInstance.
+		/// Called from <see cref="RequestMediaTypeFormatter" /> via Activator.CreateInstance.
 		/// </summary>
 		/// <param name="input"></param>
 		/// <param name="content"></param>

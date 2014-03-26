@@ -51,18 +51,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Environment.cs" />
+    <Compile Include="Exceptions\InvalidTaskResultXml.cs" />
     <Compile Include="IMetabase.cs" />
     <Compile Include="LISpMinerException.cs" />
     <Compile Include="LISpMiner\Executable.cs" />
     <Compile Include="LISpMiner\ExecutableStatus.cs" />
+    <Compile Include="LISpMiner\ExportTaskDefinition.cs" />
     <Compile Include="LISpMiner\LISpMiner.cs" />
+    <Compile Include="LISpMiner\LISpMiner.DataDictionary.cs">
+      <DependentUpon>LISpMiner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LISpMiner\LISpMiner.Tasks.cs">
+      <DependentUpon>LISpMiner.cs</DependentUpon>
+    </Compile>
     <Compile Include="LISpMiner\LMGridPooler.cs" />
     <Compile Include="LISpMiner\LMPooler.cs" />
     <Compile Include="LISpMiner\LMProcPooler.cs" />
     <Compile Include="LISpMiner\LMSwbExporter.cs" />
     <Compile Include="LISpMiner\LMSwbImporter.cs" />
     <Compile Include="LISpMiner\LMTaskPooler.cs" />
-    <Compile Include="LISpMiner\TaskLauncher.cs" />
+    <Compile Include="LISpMiner\RunTaskDefinition.cs" />
+    <Compile Include="LISpMiner\ITaskLauncher.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="ODBC\AccessConnection.cs" />
     <Compile Include="ODBC\ConnectionString.cs" />
