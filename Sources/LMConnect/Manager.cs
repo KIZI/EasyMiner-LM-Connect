@@ -23,6 +23,11 @@ namespace LMConnect
 			"http://lispminer.vse.cz/files/tgs/" + PCGrid
 		};
 
+		protected string[] DataPackages =
+		{
+			"Barbora.zip"
+		};
+
 		public string TargetPath { get; private set; }
 
 		public string CurrentVersionPath { get; private set; }
@@ -58,6 +63,7 @@ namespace LMConnect
 			var tasks = new List<Task>();
 			var directory = string.Format("{0}\\LISp Miner {1}", this.TargetPath, this.ReleaseDate.ToString("yyyy.MM.dd"));
 			var current = string.Format("{0}\\LISp Miner", this.TargetPath);
+			var data = string.Format("{0}\\..\\Data\\", this.TargetPath);
 
 			this.CurrentVersionPath = directory;
 
@@ -80,6 +86,28 @@ namespace LMConnect
 				string destination;
 
 				GetPackageInfo(package, directory, out name, out source, out destination);
+
+				var line = ConsoleLine.Append("Downloading {0} ...", name);
+
+				this.Lines.Add(name, line);
+
+				var task = this.DownloadPackageAsync(destination, name, source);
+
+				tasks.Add(task);
+			}
+
+			if (!Directory.Exists(data))
+			{
+				Directory.CreateDirectory(data);
+			}
+
+			foreach (var package in DataPackages)
+			{
+				string source;
+				string name;
+				string destination;
+
+				GetPackageInfo(package, data, out name, out source, out destination);
 
 				var line = ConsoleLine.Append("Downloading {0} ...", name);
 
