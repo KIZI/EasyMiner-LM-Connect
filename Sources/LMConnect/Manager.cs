@@ -15,10 +15,11 @@ namespace LMConnect
 		private const string VersionPath = "http://lispminer.vse.cz/download/index.php";
 		private const string FilesPath = "http://lispminer.vse.cz/files/exe/";
 		private const string PCGrid = "PCGrid.120706.VSE.zip";
+		private const string LMCore = "LISp-Miner.Core.zip";
 
 		protected string[] Packages =
 		{
-			"LISp-Miner.Core.zip",
+			LMCore,
 			"LM.GridPooler.zip",
 			"http://lispminer.vse.cz/files/tgs/" + PCGrid
 		};
@@ -39,6 +40,11 @@ namespace LMConnect
 		private WebClient Client { get; set; }
 
 		private Dictionary<string, ConsoleLine> Lines { get; set; }
+
+		private string DataFolder
+		{
+			get { return string.Format("{0}\\..\\Data\\", this.TargetPath); }
+		}
 
 		public Manager(string targetPath)
 		{
@@ -63,7 +69,6 @@ namespace LMConnect
 			var tasks = new List<Task>();
 			var directory = string.Format("{0}\\LISp Miner {1}", this.TargetPath, this.ReleaseDate.ToString("yyyy.MM.dd"));
 			var current = string.Format("{0}\\LISp Miner", this.TargetPath);
-			var data = string.Format("{0}\\..\\Data\\", this.TargetPath);
 
 			this.CurrentVersionPath = directory;
 
@@ -96,9 +101,9 @@ namespace LMConnect
 				tasks.Add(task);
 			}
 
-			if (!Directory.Exists(data))
+			if (!Directory.Exists(this.DataFolder))
 			{
-				Directory.CreateDirectory(data);
+				Directory.CreateDirectory(this.DataFolder);
 			}
 
 			foreach (var package in DataPackages)
@@ -107,7 +112,7 @@ namespace LMConnect
 				string name;
 				string destination;
 
-				GetPackageInfo(package, data, out name, out source, out destination);
+				GetPackageInfo(package, this.DataFolder, out name, out source, out destination);
 
 				var line = ConsoleLine.Append("Downloading {0} ...", name);
 
@@ -169,6 +174,16 @@ namespace LMConnect
 				ZipUtil.Unzip(directory, zip);
 
 				File.Delete(zip);
+
+				if (package == LMCore)
+				{
+					// Copy LMEmpty to data
+					const string LMEmpty = "LMEmpty.mdb";
+					const string LMEmptyUS = "LMEmptyUS.mdb";
+
+					File.Copy(string.Format("{0}\\DBCon\\{1}", directory, LMEmpty), string.Format("{0}\\{1}", this.DataFolder, LMEmpty));
+					File.Copy(string.Format("{0}\\DBCon\\{1}", directory, LMEmptyUS), string.Format("{0}\\{1}", this.DataFolder, LMEmptyUS));
+				}
 
 				this.Lines[package].Update("Finished {0} ...", package);
 
